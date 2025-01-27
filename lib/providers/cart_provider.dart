@@ -22,7 +22,6 @@ class CartProvider extends ChangeNotifier {
           quantity: existingItem.quantity + 1,
         ),
       );
-      print("add existing data");
     } else {
       _items.putIfAbsent(
         productId,
@@ -33,7 +32,33 @@ class CartProvider extends ChangeNotifier {
           quantity: 1,
         ),
       );
-      print("add new data");
+    }
+    notifyListeners();
+  }
+
+  // remove cart
+  void removeItem(String productId) {
+    _items.remove(productId);
+    notifyListeners();
+  }
+
+  // remove single item from cart
+  void removeSingleItem(String productId) {
+    if (!_items.containsKey(productId)) {
+      return;
+    }
+    if (_items[productId]!.quantity > 1) {
+      _items.update(
+        productId,
+        (existingItem) => CartItemModel(
+          id: existingItem.id,
+          title: existingItem.title,
+          price: existingItem.price,
+          quantity: existingItem.quantity - 1,
+        ),
+      );
+    } else {
+      _items.remove(productId);
     }
     notifyListeners();
   }

@@ -68,7 +68,7 @@ class ProductPage extends StatelessWidget {
         itemBuilder: (context, index) {
           final ProductModel product = products[index];
           return Card(
-            child: Consumer(
+            child: Consumer<CartProvider>(
               builder: (BuildContext context, CartProvider cartProvider,
                   Widget? child) {
                 return ListTile(
@@ -84,8 +84,15 @@ class ProductPage extends StatelessWidget {
                       SizedBox(
                         width: 50,
                       ),
-                      // todo fill this
-                      Text("0"),
+                      Text(
+                        cartProvider.items.containsKey(product.id)
+                            ? cartProvider.items[product.id]!.quantity
+                                .toString()
+                            : "0",
+                        style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                        ),
+                      )
                     ],
                   ),
                   subtitle: Text(
@@ -110,9 +117,18 @@ class ProductPage extends StatelessWidget {
                             product.title,
                             product.price,
                           );
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(
+                              content: Text("Added to cart!"),
+                              duration: Duration(seconds: 1),
+                            ),
+                          );
                         },
                         icon: Icon(
                           Icons.shopping_cart,
+                          color: cartProvider.items.containsKey(product.id)
+                              ? Colors.deepOrange
+                              : Colors.grey,
                         ),
                       )
                     ],
