@@ -3,7 +3,7 @@ import 'package:sm_provider/models/cart_provider_model.dart';
 
 class CartProvider extends ChangeNotifier {
   // cart item state
-  final Map<String, CartItemModel> _items = {};
+  Map<String, CartItemModel> _items = {};
 
   // getter
   Map<String, CartItemModel> get items {
@@ -61,5 +61,24 @@ class CartProvider extends ChangeNotifier {
       _items.remove(productId);
     }
     notifyListeners();
+  }
+
+  // clear cart
+  void clearAllCarts() {
+    _items = {};
+    notifyListeners();
+  }
+
+  // calculate total price of selected carts
+  double get totalPrice {
+    var total = 0.0;
+    _items.forEach(
+      (key, cartItem) {
+        total += cartItem.price * cartItem.quantity;
+      },
+    );
+     notifyListeners();
+    return total;
+    
   }
 }
